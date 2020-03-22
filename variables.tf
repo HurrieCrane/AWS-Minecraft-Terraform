@@ -23,7 +23,7 @@ variable "minecraft_server_eni_ips" {
 }
 
 variable "minecraft_server_region" {
-  default = "eu-west-1"
+  default = "eu-west-1" # Ireland
 }
 
 variable "minecraft_server_vpc_subnet_az" {
@@ -32,7 +32,9 @@ variable "minecraft_server_vpc_subnet_az" {
 
 /* ====== Security group configuration ====== */
 
-variable "server_ssh_ingress_cidr_blocks" {}
+variable "server_ssh_ingress_cidr_blocks" {
+  type = list(string)
+}
 
 variable "server_player_connect_ingress_cidr_blocks" {
   default = [
@@ -41,6 +43,10 @@ variable "server_player_connect_ingress_cidr_blocks" {
 }
 
 /* ====== EC2 instance configuration ====== */
+
+variable "minecraft_ec2_pem_name" {
+  type = string
+}
 
 variable "ec2_ami_name" {
   default = "ami-04d5cc9b88f9d1d39"

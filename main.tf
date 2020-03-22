@@ -1,13 +1,14 @@
+provider "aws" {
+  version = "~> 2.0"
+  region = var.minecraft_server_region
+}
+
 locals {
-  full_az     = "${var.minecraft_server_region}${var.minecraft_server_vpc_subnet_az}"
+  full_subnet_az     = "${var.minecraft_server_region}${var.minecraft_server_vpc_subnet_az}"
   common_tags = {
     "Application ID"    = "Minecraft - ${var.server_name}"
     "Application Role"  = "Minecraft Server"
   }
-}
-
-provider "aws" {
-  region = var.minecraft_server_region # Ireland
 }
 
 resource "aws_vpc" "minecraft_server_vpc" {
@@ -26,17 +27,17 @@ resource "aws_vpc" "minecraft_server_vpc" {
 resource "aws_subnet" "minecraft_vpc_public_subnet" {
   cidr_block        = var.minecraft_server_vpc_subnet_cidr_block
   vpc_id            = aws_vpc.minecraft_server_vpc.id
-  availability_zone = local.full_az
+  availability_zone = local.full_subnet_az
 
-  tags {
-    Name = "Minecraft-Public-Subnet-${local.full_az}"
+  tags = {
+    Name = "Minecraft-Public-Subnet-${local.full_subnet_az}"
   }
 }
 
 # Security group allowing SSH
 resource "aws_security_group" "minecraft_allow_ssh" {
   name          = "Minecraft_Allow_SSH"
-  description   = "Allows SSH into the minecraft server from specific IP's"
+  description   = "Allows SSH into the minecraft server from specific IPs"
 
   vpc_id        = aws_vpc.minecraft_server_vpc.id
 
@@ -61,7 +62,7 @@ resource "aws_security_group" "minecraft_allow_ssh" {
 }
 
 # Allow connections over the internet
-resource "aws_security_group" "minecraft_allow_connect" {
+resource "aws_security_group" "main" {
   name          = "Allow TCP"
   description   = "Allows players to connect to minecraft server over the internet"
 
@@ -69,7 +70,13 @@ resource "aws_security_group" "minecraft_allow_connect" {
 
   # allow tcp and udp on any port
   ingress {
-    from_port = 23
+    from_port = 0
+    to_port   = 65535
+    protocol  = "-1"
+  }
+
+  egress {
+    from_port = 0
     to_port   = 65535
     protocol  = "-1"
   }
@@ -78,4 +85,32 @@ resource "aws_security_group" "minecraft_allow_connect" {
 
 }
 
+resource "aws_network_acl" "minecraft_network_acl" {
+  vpc_id = aws_vpc.minecraft_server_vpc.id
+
+  egress {
+    from_port  = 0
+    to_port    = 65535
+
+    rule_no    = 100
+    protocol   = "tcp"
+    action     = "allow"
+    cidr_block = "0.0.0.0/0"
+  }
+
+  ingress {
+    from_port  = 0
+    to_port    = 65535
+
+    rule_no    = 100
+    protocol   = "tcp"
+    action     = "allow"
+    cidr_block = "0.0.0.0/0"
+  }
+
+  tags = {
+    Name = "main"
+  }
+
+}
 
