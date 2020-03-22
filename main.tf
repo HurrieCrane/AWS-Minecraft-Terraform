@@ -50,7 +50,7 @@ resource "aws_security_group" "minecraft_allow_ssh" {
 
   egress {
     from_port   = 0
-    to_port     = 0
+    to_port     = 65535
     protocol    = "tcp"
     cidr_blocks = [
       "0.0.0.0/0"
@@ -72,14 +72,13 @@ resource "aws_security_group" "main" {
   ingress {
     from_port = 0
     to_port   = 65535
+    cidr_blocks = [
+
+    ]
     protocol  = "-1"
   }
 
-  egress {
-    from_port = 0
-    to_port   = 65535
-    protocol  = "-1"
-  }
+  
 
   tags  = local.common_tags
 
