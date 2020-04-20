@@ -53,5 +53,5 @@ variable "ec2_ami_name" {
 }
 
 variable "ec2_instance_type" {
-  default = "t2.xlarge"
+  default = "t3.large" # "r5a.large" # "t2.xlarge"
 }

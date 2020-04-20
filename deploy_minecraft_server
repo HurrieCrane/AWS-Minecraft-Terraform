@@ -1,0 +1,15 @@
+# update yum®
+echo y | sudo yum update
+
+# install java
+echo y | sudo yum install java
+
+# unzip server
+unzip server.zip
+
+echo "eula=true" >> ~/eula.txt
+
+# start running server
+cd server
+screen -dm bash -c "java -jar minecraft_server.jar nogui"
+

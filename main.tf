@@ -68,17 +68,25 @@ resource "aws_security_group" "main" {
 
   vpc_id        = aws_vpc.minecraft_server_vpc.id
 
-  # allow tcp and udp on any port
+  # allow tcp on any port
   ingress {
     from_port = 0
     to_port   = 65535
     cidr_blocks = [
-
+      "0.0.0.0/0"
     ]
-    protocol  = "-1"
+    protocol  = "tcp"
   }
 
-  
+  # allow udp on any port
+  ingress {
+    from_port = 0
+    to_port   = 65535
+    cidr_blocks = [
+      "0.0.0.0/0"
+    ]
+    protocol  = "udp"
+  }
 
   tags  = local.common_tags
 
