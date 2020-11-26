@@ -10,7 +10,7 @@ resource "aws_instance" "minecraft_server_ec2" {
   ]
 
   depends_on = [
-    aws_internet_gateway.minecraft_internet_gateway,
+    aws_internet_gateway.minecraft_internet_gateway
   ]
 
   associate_public_ip_address = !var.create_elastic_ip
@@ -21,7 +21,5 @@ resource "aws_instance" "minecraft_server_ec2" {
   }
 
   key_name = var.minecraft_ec2_pem_name
-
-  tags = local.common_tags
-
+  tags     = local.common_tags
 }

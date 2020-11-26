@@ -4,29 +4,38 @@ variable "server_name" {}
 variable "create_elastic_ip" {
   type = bool
 }
+variable "allow_ssh" {
+  type    = bool
+  default = true
+}
 
 /* ====== VPC and subnet configuration ====== */
 
 # CIDR block allocation for Minecraft VPC
 variable "minecraft_server_vpc_cidr_block" {
   default = "172.31.0.0/25"
+  type    = string
 }
 
 variable "minecraft_server_vpc_subnet_cidr_block" {
+  type    = string
   default = "172.31.0.0/26"
 }
 
 variable "minecraft_server_eni_ips" {
+  type    = list(string)
   default = [
     "172.31.0.10"
   ]
 }
 
 variable "minecraft_server_region" {
+  type    = string
   default = "eu-west-1" # Ireland
 }
 
 variable "minecraft_server_vpc_subnet_az" {
+  type    = string
   default = "a"
 }
 
@@ -37,6 +46,7 @@ variable "server_ssh_ingress_cidr_blocks" {
 }
 
 variable "server_player_connect_ingress_cidr_blocks" {
+  type    = list(string)
   default = [
     "0.0.0.0/0"
   ]
